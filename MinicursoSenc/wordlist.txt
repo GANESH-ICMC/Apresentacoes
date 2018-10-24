@@ -1,28 +1,3 @@
-senhas.txt
-Today
-7:48 PM
-G
-Gabriel Couto Tabak changed permissions on an item
-Text
-senhas.txt
-Can view
-Anyone with the link
-Can edit
-You
-Anyone at usp.br with the link
-7:44 PM
-G
-Gabriel Couto Tabak changed permissions on an item
-Text
-senhas.txt
-Can view
-Anyone at usp.br with the link
-2:44 AM
-G
-Gabriel Couto Tabak uploaded an item
-Text
-senhas.txt
-
 123456
 password
 123456789
