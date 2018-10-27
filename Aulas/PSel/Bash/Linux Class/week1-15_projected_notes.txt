@@ -1,0 +1,2688 @@
+
+Some sources for UNIX/Linux history:
+
+*   Chapter 1 of the course text
+
+*   http://www.unix.org/what_is_unix/history_timeline.html
+*   http://www.linux.org/article/view/what-is-linux
+*   http://www.cs.bell-labs.com/who/dmr/trib/2u.html
+
+*   http://www.aboutlinux.info/2005/11/complete-concise-history-of-gnulinux.html
+*   http://photos1.blogger.com/blogger/3370/2500/1600/GNULinuxupdatedw4.0.jpg
+*   http://upload.wikimedia.org/wikipedia/commons/1/1b/Linux_Distribution_Timeline.svg
+
+BSD - Berkeley Software Distribution
+
+...
+
+POSIX - Portable Operating System Interface
+
+*   family of standards
+*   specified by the IEEE
+*   purpose is maintain compatibility
+    between operating systems,
+
+    defining the Application Programming 
+    Interface (API)
+    along with command-line shells and
+    utility interfaces, for software 
+    compatibility with variants of UNIX
+    and other operating systems
+
+*   POSIX.2, one of this family of
+    standards, is a standard for user
+    commands, and the text uses this
+    standard;
+    ...ideally, this should mean that
+    UNIX systems from different sources
+    and on different machines
+    should be more consistent on the
+    command-line level if they are
+    POSIX.2 compliant...
+
+*   some common shells -
+    Korn Shell (ksh)
+    Bourne shell (sh)
+    C shell (csh)
+    GNU Bourne-again shell (bash)
+   
+
+CS 279 - Week 2 Lecture 1 during Lab - 9-02-14
+
+Chapter 2 - UNIX Basic Concepts/Fundamentals
+
+*   use the echo command to send the value of its expression
+    to standard output
+
+echo "Howdy"
+Howdy
+echo "Howdy" > boo
+...boo now is a file with that text...
+
+(ref: Chapter 2 of "UNIX for the Impatient")
+
+*   system administration (in UNIX/Linux world) is a 
+    collection of tasks whose purpose is to make
+    the UNIX system available to its users in an
+    orderly and secure manner
+
+*   who can perform system administration tasks?
+    the superuser (or superusers)
+
+    ...the programs/files for system administration
+    are accessible only to specially-designated user(s)
+    called the superuser
+
+    *   the special user name for the superuser: root
+
+    *   whoever knows the password for the root account
+        CAN act as superuser...
+
+    *   initial password for root is set
+        as part of the process of installing a system;
+
+    *   Restrict root logins to allow from system console ONLY
+        Use sudo to allow non-privileged users to run privileged
+        commands (visudo)
+
+    *   Carefully allow non-privileged users to become root via: sudo su -
+        when absolutely necessary, and without having to share the
+        root password
+        These users have to be member of the "wheel" group
+
+*   IN GENERAL, to USE a UNIX system, you must be
+    registered as one of its users -- you need a user
+    account on that system
+
+    each user on a UNIX system has a login name,
+    a password, a primary group membership, an area of the
+    file system reserved for storing his/her files (also known
+    as the users "home" directory, and the users primary shell
+
+*   permissions in UNIX in general are based on 3
+    levels: owner level, group level, and world level
+
+    (world really means everyone with an account on that
+    machine.)
+
+    We will refer to these going forward as "user" level, "group"
+    level, and "other" level
+
+*   environment variables are UNIX shell variables
+    that hold useful information...
+
+    ...note that when looking up the value of shell variables (in bash)
+    start with a $ sign
+    ...when setting a shell variable (usually upper case), do NOT use $ sign
+
+    Example:  export CS_CLASS="CS279-in-BSS"
+    but:      echo $CS_CLASS
+
+    The shell command to view ALL environment variables is "env"
+
+    $SHELL - holds your login shell
+    $0 - holds your current shell (really the currently-
+         running shell)
+
+    Please avoid Space characters in variables whenever possible.
+
+*   the UNIX kernel
+    *   heart of the OS!
+    *   controls access to the computer and its files,
+        allocates resources among the various activities
+        taking place within the computer,
+        maintains the file system, and
+	manages the computer's memory
+        handles the control of specific hardware components via either
+        kernel compiled (built-in) drivers, or external kernel modules.
+
+*   the activities taking place within a UNIX system
+    are called "processes"
+
+*   ps command: process status
+
+*   daemon: a system process that "reside[s] in the system more or less
+    permanently and perform ongoing tasks....", usually ending with letter "d"
+
+    Examples:  httpd    -  apache Web Server daemon
+               sshd     -  secure shell daemon
+               nfsd     -  network file system (nfs) daemon
+               atd      -  at daemon (for scheduling specific tasks)
+
+    Daemons can be started automatically upon boot, or entering a specific
+    run level.  We will get to that later.  Reference SVR4 init process.
+    SVR4 is short for System 5 Release 4, one of the most popular UNIX
+    releases to date.
+
+    chkconfig --list
+
+    displays the init.d defined start/stop configuration for each runlevel
+
+*   runlevel:  0 through 5  (in Linux), and most modern AT&T derived Unix
+    releases.  Reference Chapter 14.6, init command
+
+               0 - Halt (shuts down system)
+               1 - Single User mode  (for offline systems administration,
+                                      e.g. file system checks)
+               3 - Multi User mode (network enabled, no GUI on server)
+               5 - Multi User mode (network enabled, GUI on server)
+               6 - Reboot (caution on older Unix systems)
+
+
+
+CS 279 - Week 2 Lecture 2 - September 3, 2014
+
+NOTE AFTER CLASS:
+********
+ps x
+********
+...THAT's the option for ps/process status that lets you see all of
+   the processes YOU own, even if they aren't from your current shell
+   session!!!!
+   *   (this is the version that is very useful if you need to kill
+       a process from an accidentally terminated shell session or to kill
+       a process running amok such that you can't kill it from its
+       "home" shell session,
+       
+       so that you can get its process ID to use in a kill command...)
+
+Playing with symbolic mode to modify a set of permissions
+
+*   reference: Section 2.8.3, "Unix for the Impatient", 2nd edition
+
+ugo - u user (owner)
+      g group
+      o others ("world" - others who have 
+                accounts on that system
+
+      a - all - everyone, u and g and o
+          (equiv to saying ugo)
+
+*   to use symbolic mode to specify how to
+    modify a set of permissions:
+
+    [below is mostly quoted from Section 2.8.3
+    of "Unix for the Impatient"]
+
+    *   consists of 1 or more clauses separated
+        by commas
+    *   each clause consists of 0 or more "who"
+        letters followed by a sequence of one
+        or more actions to be applied to the
+	categories designated by the "who" 
+        letters
+    *   the effect of that set of clauses
+        is achieved by executing in sequence
+        the actions of each clause
+
+*   "who" letters: u g o and a (as defined 
+    above)
+
+*   you CAN omit the "who" letters preceding
+    the operator,
+    and the result is that a (or ugo) is assumed
+    AND the file creation mask (section 2.8.5)
+    is applied to reduce the permissions as
+    they would be reduced for a newly created
+    file
+
+*   here are the operators:
+    + 	     add these permissions
+    -	     take away these permissions
+    =        set exactly these permissions,
+             removing any others for the
+	     indicated "who" letters
+
+*   here are the permissions:
+    r	     read
+    w	     write
+    x        execute
+    X        execute ONLY if the file is a 
+             directory OR some x permission
+             is already set for u, g, or o
+    s        set user or group ID
+    t        sticky bit
+
+*   if you type a "who" letter AFTER an
+    operator,
+    then a copy of the permissions 
+    currently associated with the specified
+    "who" letter are used
+
+*   a + or - operator followed by nothing
+    has NO effect
+    BUT an = operator followed by nothing
+    has the effect of CLEARING the permissions
+    for those sets specified by the "who"
+    letters
+
+starting perms    symbolic mode    final perms
+-----------------------------------------------
+----------        a=rw             -rw-rw-rw-
+-rw-------        go+r             -rw-r--r--
+-rwxrwxrwx        a-x              -rw-rw-rw-
+-rwxrwxrwx        g-w,o-wx         -rwxr-xr--
+-rwxrwx---        o=g              -rwxrwxrwx
+-rwxrwx---        o=g-xw           -rwxrwxr--
+-rwxrw-rw-        g+X              -rwxrwxrw-
+drw-rw-rw-        a+X              drwxrwxrwx
+-rw-rw-rw-        a+X              -rw-rw-rw-
+-rw-rwxrw-        a+X              -rwxrwxrwx
+
+-rw-rw---x        o+u              -rw-rw-rwx
+-rwxrwxrwx        a-x,u+x          -rwxrw-rw-
+
+***
+
+Setting absolute file permissions in Octal (3-bit) notation:
+
+Each block of permissions (u, g, o) can be represented
+with their Octal value 
+
+----------        000            chmod 000 {file-name}
+ 421421421
+
+-r--r--r--        444            chmod 444 {file-name}
+ 421421421
+
+-rw-r----         640            chmod 640 {file name)
+ 421421421
+
+-rwxrwxrwx        777            chmod 777 {file-name}
+ 421421421
+
+
+CS 279 - Week 3 Lecture 1 - 9-8-2014
+
+*   more on executing commands...
+
+*   much of this is from Chapter 6.14 of the course text!!
+
+*   Shell, and subshell
+    Each shell has its own environment (variables).  However, how does
+    one control the effect on the shell environment by executing commands,
+    or scripts?
+
+    *   Intrinsic (built-in) commands like cd, ls, set, etc. are executed
+        in the current shell.  
+
+        *  Changes to shell environment stay until the shell is closed
+
+    *   Executable commands (located in the search path directories), as
+        defined by the $PATH variable, and shell scripts are typically
+        run in a sub-shell, which spawns the parent shells' environment,
+        runs the command, and returns control to the parent shell at the 
+        completion of the command or script.
+
+        *  Changes to the subshells' environment get lost when the subshell
+           closes, and returns control to the parent shell.
+
+        *  Exception:  source shell_script
+                         or
+                       . shell_script
+
+           This will run the shell script in the current shell, without
+           opening a subshell.  All changes to the environment done by
+           the shell script will remain.
+ 
+           Consider the following:
+
+           You are calling a shell script, that itself calls other shell
+           scripts.  The sub-scripts are modifying environment variables
+           that are are being queried by other commands further down in
+           the parent shell script.
+
+           When calling the sub-scripts the typical way (by calling the
+           sub-script by its relative, or absolute path), any changes to
+           variables made by the sub-script will be lost to the parent.
+
+           By sourcing the sub-script, the variables will survive, as the
+           sub-script was executed by the current shell, instead of inside
+           its own sub-shell.
+
+           When using source, or . the current path (pwd) will be searched
+           for the script, it is therefore not necessary to specify the
+           path.  However, it never hurts to specify the path to any script.
+
+           A common example is to source a shell script containing the
+           necessary environment variables for the user profile
+
+           cd ~
+           . ./.profile
+
+           Wait a second, ther are *lots* of .'s in this line. Let's take
+           a quick look:
+
+           The first . is the "source" command in the Korn/Bash shell. 
+           The . in ./ references the current directory. 
+           The . in .profile indicates the file is a hidden file. 
+
+
+*   Re-cap of shell variables
+
+    *  Usually upper case, but don't have to be
+       (code is easier to read, though)
+
+    *  When reading the content of a variable, pre-clude $
+       set VARIABLE
+       but
+       echo $VARIABLE
+
+    *  Common variables:
+       $SHELL      contains the path, and name of the users' default shell
+       $0          contains the name of the current shell
+                   (the user may have changed her/his shell after logging in)
+       $PATH       contains the search path for executable files
+       $HOST       contains the computers' host name
+       $USER       contains the logged-in user ID  (yours)
+
+
+
+*   Re-cap of file system paths:
+
+    *  /
+       the Root of the File System, all absolute paths start with /
+
+    *  .
+       the current directory, relative "child" paths can start with ./
+       although, it can be omitted.
+
+    *  ..
+       the parent directory.  All directory except for / have one!
+       All relative "parent" paths start with ../
+       (although, it is legal to start with ./../ , but why type more?)
+
+
+*   Re-cap on mv command:
+
+    *  mv {source} {destination}
+       If the path of the source, AND the destination is the SAME, the
+       command is effectively renaming source to destination
+       Otherwise, the file is moved from the path specified as source
+       to the destination.  If the destination includes just an existing
+       path instead of the path AND destination file name, the file will be
+       moved inside the destination path.  If the destination includes
+       BOTH an existing path AND a file name, the source file will be 
+       moved AND renamed at the same time.
+       
+    *  Examples:
+
+       mv ~/279lab03/testfile1 ~/279lab03/testfile1-new
+
+       The file file is renamed and remains in the same directory
+       (if the file exists at the source path)
+
+       mv ~/279lab03/testfile1 ~/279lab02/testfile1-new
+
+       The file will be moved to the new folder (if it exists) and
+       given a new name
+
+       mv ~/279lab03/testfile1 ~/279lab02/
+       (it doesn't hurt to specify a trailing / at the end of the
+       destination path)
+       The file will me moved to the new location, IF the folder exists.
+
+*   Re-cap of wildcards in file names:
+
+    *  will match zero, or more characters of any type
+    ?  will match ONE single character of any type
+
+    Examples:
+
+    CBrown*   will match ALL file names STARTING with CBrown
+    *ucy      will match ALL file names ENDING in ucy
+              (that includes a file named "ucy")
+    S?oo*     will match files like Snoopy, Snoopy123, Spook, Sloozy-321, etc.
+    r*m?a     will match files like rumba, r001-amma, remember-mia, etc.
+    r??tc*    will match files like rootcanal, r1dtc2.txt, roctc, etc.
+    b*rs*l    will match files like barstool, bearstoenail, boarstail, etc.
+              (MUST start with "b", MUST have "rs" somewhere in the middle,
+              AND MUST end with "l", anything else is optional)
+
+
+CS 279 - Week 3 Lecture 2 - 9-10-2014
+
+*   more on processes...
+
+*   much of this is from Chapter 2 of the course text!!
+
+*   exit status of a process
+    *   3 possible outcomes of calling a process:
+        success
+        failure
+        abnormal termination
+
+    *   the EXIT STATUS of the process is a number
+        that indicates which is the case;
+
+        *   a process can terminate normally of its
+            own accord, returning an exit status to
+            its parent
+
+        *   by UNIX/Linux convention, an exit status of 0
+            indicates success
+
+        *   any OTHER exit status value indicates failure;
+            the actual value can indicate the nature of the
+	    failure;
+
+            *   by convention (not sure how universal!)
+                a normal "failure" exit status is less than
+                128 to avoid confusion with an exit status
+                resulting from abnormal termination
+ 
+            *   for abnormal termination -- say, an interrupt
+                or other signal -- the process itself may not
+		be able to return an exit status because
+		it may have lost control,
+
+		so the KERNEL returns an exit status on
+		behalf of that process indicating why it
+		terminated,
+                in this case, often 128 + the signal
+		code number (137 of you kill the process
+                with SIGKILL, kill -9, for example)
+
+*   so, one can test the exit status of a process
+    and use that to determine what to do next;
+
+A little more on job control...
+*   "job control", by definition, is a shell facility,
+    intro'd by BSD and standardized by POSIX,
+    that enables you to create groups of processes called
+    JOBS
+    and to control them from your shell session using
+    shell commands.
+
+    *   a job, then, can be thought of (I think!) as
+        collection of 1 or more processes;
+
+*   Consider: one COULD consider that, when you are
+    logged in, your shell is in ONE of TWO states:
+    1. at a shell prompt awaiting your command/input
+    2. OR it is executing a command that has control of
+       the terminal
+
+    *   IF the shell is executing a command, then the processes
+        entailed in that execution constitute the FOREGROUND
+	job
+  
+    *   Thus, at a given time, there is either ONE foreground
+        job, or NONE;
+
+*   in addition, ANY number of jobs can be running in the
+    background or stopped (suspended)
+    *   a RUNNING BACKGROUND JOB is a job that is running but it is
+        NOT the foreground job
+
+    *   a STOPPED BACKGROUND JOB is in a suspended state;
+        it remains dormant until you take action to resume it
+
+    *   If there are ANY stopped background jobs,
+        the CURRENT JOB is the one that was stopped MOST
+        RECENTLY <-- that's the one marked with + in
+	the jobs command output;
+
+        *   OTHERWISE, the CURRENT JOB, if any, is the 
+            background job MOST RECENTLY suspended or
+            initiated
+
+        *   YES, this does mean that, in terms of the
+	    definition of current job, a stopped job
+	    does get "priority" over a running background
+	    job;
+
+        *   if there are NO background jobs or stopped jobs,
+            then the current job is UNDEFINED.
+
+        *   The most current job (the one with the +) can be
+            easily resumed with the %+, or %% command. fg will work, too.
+
+        *   The next most recent job (the one with the -) can
+            be easily resumed with the %- command.
+
+*   note that 1 way to start a background job is to
+    end the command with an ampersand (&)
+
+    nano moo &
+
+    *   when you start it this way, the shell shows
+        the job number and the process id associated
+	with that job.  If you are running an X-Windows
+        aware job on a graphical terminal, the job will
+        continue running in a new Window.
+
+        Example:  emacs moo2 &
+
+        unless you "force" non-X-Windows mode (with option -nw)
+
+*   interesting tidbit: when a job terminates or changes
+    status in some way, 
+    the shell NOTIFIES you of the change JUST before
+    it issues the next command prompt;
+
+*   if a running background job attempts to read from
+    the terminal, it is stopped (until it becomes the
+    foreground job, and then it can read from the
+    terminal...)
+
+    *   if a running background job attempts to write to
+        the terminal, whether it stops or merrily writes
+	to the screen depends on the setting of
+	the terminal setting tostop
+
+    *   (terminal output stop, maybe...?)
+    *   if tostop is ENABLED, such a running background
+        process will be stopped until the job is moved
+	to the foreground;
+	
+	if tostop is disabled, the output from that
+	running background process may be intermingled
+        with output from the foreground process
+
+        In our example, we diverted the STDOUT, and STDERR output
+        of the background job into a file, e.g. the 'bit bucket'.
+
+        ls -laR / > /dev/null 2> /dev/null &
+
+        The first redirect (>) redirects STDOUT (what would normally
+        be printed on your terminal screen), the second redirect (2>)
+        redirects STDERR (any errors from the process, that would also
+        normally get printed to the terminal screen).
+
+        We also learned, that a shorter way to redirect both STDOUT, and
+        STDERR to the same target file is via
+
+        ls -laR / > /dev/null 2>&1 &
+
+        The &1 in the above command is a Shell variable containing the first
+        parameter of the command, which was "/dev/null".
+
+    *   We were then able (without getting the scrolling output from the
+        background job on our screen) to issue the 'jobs' command, which
+        showed the background job as running.
+
+*   In our example, we were listing the entire directory/file structure of
+    the system we used in a recursive fashion (the R in 'ls -laR') starting
+    at /
+
+    *   This didn't take a lot of time on the system we used, so we had to
+        be quick enough to issue the 'jobs' command, before the job ended
+
+        *   We used the bash shell shorthand command "!j", which issued
+            the last typed command that started with the letter "j"; in
+            our case "jobs".
+
+            *   This works with any command issued in the bash shell
+
+                Consider issuing the commands
+
+                ls -la ~
+                cd ~/homwework
+                !l
+
+                The last command will repeat the previously issued "ls -la ~"
+                command, as it was the last command typed, that started with
+                the letter  "l".  Note, that you are not limited to one single
+                character after ! (also known as "bang" in Unix/Linux)
+
+                
+
+
+CS 279 - Week 4 Lecture 1 - 9-15-2014
+
+*   still on Chapter 2!
+
+*   NOTE:
+    *   when you run a bash shell script, it turns out
+        it is run in a new child shell (which exits
+        when your shell script exits)
+
+    *   to run a bash shell script's commands as part
+        of the current shell session, use the source
+	command:
+
+        source <script-name>
+
+   compare:
+   *   put a job in the background
+   *   run:
+       jobs-demo.sh
+   *   compare to:
+       source jobs-demo.sh
+
+Job Identifiers - from course text, p. 34
+------------------------------------------
+*   (DON'T type the < > below -- they are surrounding things YOU 
+    choose)
+
+%<n>		Job number <n>
+%<str>		The unique job whose name begins with <str>
+%?<str>		The unique job whose name contains the string <str>
+%+		The current job
+%%		The current job
+%		(in bash) The current job
+%-		The previous job
+
+*   you can change the status of a Stopped job to Running (in
+    the background) with the bg command
+
+    bg %3    # tries to make job [3] Running in the background
+
+Process Groups - from Section 2.6.4, course text
+-------------------------------------------------
+*   process group: a set of processes that can be signalled 
+    together
+
+*   FIRST process to enter a process group becomes the 
+    process group leader --
+
+    its process ID becomes the GROUP's process ID;
+
+*   example: the processes in a pipeline form a process group
+    whose process group leader is the first process in the pipeline:
+
+    ps x | grep emacs | sort > looky
+
+    *   ps x is the process group leader above;
+        its process ID becomes the group's process ID (according
+        to the textbook, not sure based on our experience???)
+
+Environment Variables - a little taste, with more to come
+----------------------------------------------------------
+*   from section 2.6.5 of the course text
+
+*   every process has a collection of ENVIRONMENT VARIABLES
+    associated with it;
+    *   want to see those currently in effect? use the env command
+        (sounds familiar?)
+
+        env
+
+    *   these can be USED or SET by the process
+
+    *   these are INHERITED by SUB-processes
+
+*   Inherited? Yes --
+    *   when you start a new process as a CHILD of another,
+        UNIX sets the environment variables of the child process
+        to a COPY of its parent's environment variables;
+
+    *   FROM THAT POINT, though, the environment variables of the
+        child and the parent are INDEPENDENT -- it's a one-way 
+        thing!
+        *   one process CANNOT examine or modify the environment
+            variables of another...! (acc. to p. 36, course text)
+
+        *   when a process ends, its environment variables DISAPPEAR
+            and any CHANGES to these variables are LOST;
+
+*   but wait, there's more --
+    most UNIX programs that accept commands interactively 
+    (including shells)
+    ALSO have a set of LOCAL VARIABLES that help to define the 
+    program's behavior;
+
+    *   the relationship between environment variables and 
+        local variables IS confusing; more on that later!
+
+Real and Effective Users and Groups - p. 36, course text
+--------------------------------------------------------
+*   REAL USER ID of a process ordinarily identifies which user
+    CREATED the process
+
+    *   when a *process* spawns a child process, that child
+        process INHERITS the real user ID of the parent;
+
+*   also: each process has an EFFECTIVE USER ID that determines
+    the process's PRIVILEGES
+
+    *   this provides a mechanism for a program to perform
+        privileged operations on your behalf; 
+
+	e.g., the passwd program
+
+*   likewise, each process has analogous REAL GROUP ID and
+    EFFECTIVE GROUP ID
+
+The UNIX file system -- continued!
+-----------------------------------
+*   from section 2.7 of the course text;
+
+*   because we've already talked about it quite a bit,
+    with quite a bit more to come...!
+
+*   3 kinds of files:
+    *   regular files
+    *   directory files
+    *   special files (of several kinds)
+
+*   UNIX views a file -- whichever its type -- as a 
+    SEQUENCE of BYTES;
+
+*   a filename can include any character except for '/' or the null
+    character
+    *   (although some characters such as '&' and <space> can be
+        a pain, because of their special meanings on command lines)
+
+*   (and avoid hyphens as the FIRST character of a filename...
+    hyphens are the indicator of a command option, e.g. ls -l {file}
+    if your file starts with a hyphen, the process ls would mistake
+    your file name for an - likely undefined - option)
+
+*   by convention, a dot (.) at the start of a filename is used
+    for an INITIALIZATION file or other SUPPORTING file for a 
+    particular program --
+    *   recall that these are the "invisible" files not shown
+        by the ls command unless the -a (all) option is given;
+    
+Pathnames
+---------
+*   a PATHNAME is a name that designates a file -
+    consists of a sequence of filenames separated by slashes (/)
+
+    *   see the idea here?
+        the filenames are the COMPONENTS of the pathname;
+
+    *   the LAST filename in a pathname is called the BASENAME
+    *   the portion PRECEDING the last filename is called the
+        PATH PREFIX
+        *   (the trailing slash is OPTIONAL in a path prefix
+            designating a directory...)
+
+*   (and we've already discussed how there are TWO kinds of 
+    pathnames, ABSOLUTE and RELATIVE)
+    ...where ABSOLUTE begins with a /,
+       and RELATIVE does not;)
+
+*   (and we've already discussed how 
+    .
+    is a nickname for the current working directory, and
+    ..
+    is a nickname for the parent of the current working directory)
+
+*   likewise, we've noted that (in all but the Bourne shell)
+    *   ~
+        ...at the start of a pathname refers to the home 
+        directory of the current user
+
+	~/bin
+	...refers to the bin directory in the logged-in user's home 
+        directory
+
+    *   ~<user>
+        ...refers to the home directory of user <user>
+
+        ~ah270/279submit
+	...refers to file 279submit in ah270's home directory
+   
+   
+CS 279 - Week 4 Lecture 2 - 9-17-2014
+
+Subsidiary file systems
+-----------------------
+*   reference: section 2.7.4
+
+*   UNIX permits parts of the directory hierarchy to reside 
+    on separate storage devices, in separate disk 
+    partitions, etc.
+
+    *   these parts of "the UNIX file system" are called 
+        "file systems"
+
+    *   why? to permit more storage, to allow for 
+        handling temporary storage devices, to permit 
+        network file systems, etc.;
+
+*   UNIX associates such a file system with a MOUNT POINT
+    *   mount point: a directory in a [primary] file system 
+        that corresponds to the root directory of some other 
+        [secondary] file system
+
+    *   the mount command is given the pathname to the 
+        mount point
+            [in the primary file system],
+        and the location of the secondary file system 
+        to be mounted
+	    at that mount point;
+
+        result: the root of the secondary file system 
+        now corresponds to the mount point in the primary 
+        file system;
+
+        *   and once a file system has been mounted, 
+	    you can refer to any file or directory within it 
+            by using 
+                a path the passes through the mount point;
+
+*   NOW -- once it is mounted, do you really need to know 
+    that it is a mounted secondary file system, as opposed 
+    to just another directory subtree starting from that 
+    directory?   
+
+    *   turns out that, sometimes you do;
+
+    *   there are some restrictions on some kinds of 
+        connections across
+        file system boundaries (we'll discuss one example of 
+        this related
+	to links below)
+   
+    *   and, not unexpectedly, when a file system is unmounted,
+        you lose access to its files until it is remounted...
+
+Links
+------
+*   pp. 41-42 of course text
+
+*   hard links and symbolic/soft links
+    *   according to text, if someone JUST says "link", 
+        a hard link is assumed;
+    *   The term "symlink" refers to a symbolic/soft link
+
+*   hard link:
+    *   A [hard] link to a file is a directory entry for that 
+        file, consisting of a filename that names the file 
+        within the directory and an i-node number
+
+    *   i-node number: a unique identifier for a file 
+        within a file system
+
+    *   ls with the -i option shows the i-node numbers for 
+        the files:
+        ls -i
+	ls -li
+
+    *   ln command (without the -s option) creates a hard 
+        link to an existing file
+
+        ln existing-file-name hard-link-name
+
+        (although, once made, you can mv or delete that 
+        existing file without affecting the new hard link 
+        -- interesting and true!)
+
+        *   a file is not deleted until ALL hard links to it 
+            are removed;
+
+   (beware -- emacs creates a NEW copy of a file with
+   a new i-node number! BUT vi does not...)
+
+    *   can only (hard) link to a file in the same file 
+        system;
+
+*   symbolic link (soft link)
+    *   specifies a PATHNAME 
+        *   If that pathname designates an actual file, then the
+            symbolic link refers to that file.
+
+	*   If it designates another symbolic link, then 
+            that link is followed in turn.
+
+	*   A symbolic link can specify a pathname for 
+            which NO file exists; in that case a reference 
+            to the link is treated like a reference to any 
+            other nonexistent file.
+
+    *   a symbolic link can link to a directory or to a special
+        file as well as to a regular file;
+	...it is also allowed to files in different file systems
+
+*   use ln command with the -s option to create a symbolic link
+
+    ln -s existing-file-name soft-link-name
+
+*   (compare a hard link to a symbolic link using 
+    ls -li
+    ...interesting differences!)
+
+*   do you see the difference between hard and symbolic links?
+    *   for a new hard link, what is stored is the link 
+        filename and an
+        inode number; it just so happens that another filename 
+        also
+        happens to include the same inode number.
+
+    *   for a new soft/symbolic link, what is stored is the link
+        filename and the pathname to the linked-to file; 
+        it is clear,
+        then, WHICH is the original/target;
+
+How files are stored
+---------------------
+*   reference: Section 2.7.7
+
+*   p. 42:
+*   "The file system stores the essential information about 
+    a file in 
+    an i-node (information node):
+    *   where the file's actual contents are stored
+    *   how long the file is
+    *   how many LINKS there are to it [<-- hard links, then, 
+                                            NOT symbolic]
+    *   when it was created
+        and so on"
+
+    *   an i-node is identified uniquely [within a file 
+        system] by an 
+        i-number/i-node number
+
+*   The actual data in a file is stored in a sequence of BLOCKS.
+    *   typical for a modern system: 4096 bytes
+
+    *   if a file is longer than 1 block?
+
+        file system stores its contents in scattered data 
+        blocks,
+	and uses a smaller set of blocks to keep track of 
+        where the
+	data blocks are;
+        
+    *   ^ the blocks in this smaller set contain pointers to the
+        data blocks; 
+	they are called INDIRECT blocks because they provide 
+        access 
+        to the data indirectly
+
+    *   For VERY LARGE files, there may be a SECOND level of 
+        indirect blocks that point to the first-level blocks 
+        or even, in 
+        some cases, a THIRD level --
+
+        The UNIX utilities that show the number of blocks in 
+        a file 
+        count INDIRECT blocks, as WELL as the blocks containing 
+        the ACTUAL data of the file...
+   
+
+CS 279 - Week 5 Lecture 1 - 9-22-2014
+
+*   2 approaches to file limits...
+
+    *   maximum size of a single FILE, 
+        limited by a parameter named ULIMIT that's
+        part of the kernel configuration
+
+        ...some shells provide a 
+	ulimit
+	...command, to see this;
+
+    *   OR, the superuser may impose a quota of the
+        total file space (and/or even number of files)
+        that a user's files can occupy
+
+        (this CAN be different for different users)
+
+*   set-uid bit
+    *   when the set-uid bit of a program file is set,
+        enables that program to run with the permissions
+        of its OWNER rather than the with the permissions
+	of the user running it;
+
+    *   you'll see an s for the x in the OWNER's permissions
+        if the set-uid bit IS set for a program;
+
+        (and, as the owner, you can specify the set-uid bit
+        with s when you use the chmod command)
+
+    *   to see more: section 2.8.2, p. 48
+
+*   set-gid -- like set-uid except it applies to
+    group permissions rather than owner permissions
+
+*   sticky bit --
+    when set on a directory, prevents files in that
+    directory from being deleted or renamed by anyone
+    other than the owner
+
+    when set on an executable program, it provides a
+    means for retaining that program in memory when a
+    program is to be shared among many users
+
+*   umask!!
+
+    *   a program creates a file, with some permissions;
+        THEN, these permissions are REDUCED by the FILE
+        CREATION MASK, also known as umask (user mask)
+
+    *   umask 
+        lets you see your file creation mask
+        in octal (what gets SUBTRACTED from the initial
+	permissions)
+
+        umask -S
+	lets you see your file creation mask
+	in SYMBOLIC form, in terms of WHAT is "allowed through"
+
+    *   Advanced:  There are also ways to restrict the total amount
+        of file system space a group can have:  group-quotas
+
+    *   Advanced:  look at the man page of limits.conf
+        The file is at /etc/security/limits.conf
+
+
+CS 279 - Week 6 Lecture 2 - 10-1-2014
+
+*  local variables -- I think section 2.13 of the
+   course text doesn't completely apply to bash...
+
+   *   see examples in varplay.sh and clicker1.sh
+
+*  above were LOCAL variables -- what if you'd like
+   to make your own ENVIRONMENT variables?
+
+   ...precede the creation of the variable with
+      the command export
+
+export DOG="caesar"
+
+*   Initialization files
+
+    *   a UNIX program can have these..
+
+    *   bash has several!
+
+    *   for bash,
+        .bash_profile is executed for login shells
+        .bashrc is executed for interactive non-login
+            shells
+
+REGULAR EXPRESSIONS
+--------------------
+*   regular expression - RE - defines a pattern of
+    text to be matched
+
+    ...expected by a number of UNIX utilities, such
+    as grep, sed, and more
+
+*   2 kinds of REs in UNIX:
+    basic regular expressions:  BRE
+    extended regular expressions: ERE
+
+    BRE - understood by older UNIX programs (grep,
+          ed, sed)
+    ERE - a generalization of BRE recognized by
+          egrep (same as grep -E)
+
+BREs
+----
+*   a "regular" character in a BRE matches that 
+    character in the text
+    
+grep oink *   # found lines in the files in the cwd
+              #    containing oink anywhere in them
+
+*   these are special characters in BRE:
+    .   matches any single character 
+    *   if this follows a single character,
+        matches 0 or more occurrences of that char
+
+        a pattern that matches a SET of characters
+        followed by a * matches ZERO or MORE characters
+        FROM THAT SET
+
+Regexp Reference Examples:
+
+http://web.mit.edu/hackl/www/lab/turkshop/slides/regex-cheatsheet.pdf
+http://regexlib.com/CheatSheet.aspx 
+https://github.com/shadowbq/Cheat-Sheets/raw/master/regex/regular-expressions-cheat-sheet-v2.pdf
+   
+      
+ 
+
+BASIC regular expressions...(BRE)
+
+in a BRE...
+
+*   "plain" characters match themselves
+
+*   the following characters in a BRE are special
+    ANYWHERE:
+
+    .   *   [   \ 
+
+    some characters in a BRE are special under
+    particular conditions:
+
+    ^ is special at the beginning of a pattern
+    $ is special at the end of a pattern
+    the character that terminates a string/pattern
+       is special throughout the string/pattern
+       (BUT what this character is may depend on the context)
+
+*  so, getting into the MEANINGS of these special characters
+   (or most of them...)
+
+   \ escapes the special meaning of a special character
+   (but the behavior of a backslash preceding a non-special
+   character in a BRE is undefined, and so should be avoided)
+
+   . matches any single non-null character
+       (sort of the equiv to pattern expansion's ?)
+
+   ^ - a hat/caret at the beginning of the outermost
+       RE matches the BEGINNING of a line
+       (anywhere else it may match itself, in some BRE implementations)
+
+   $ - a dollar sign at the end of the outermost
+       RE matches the END of a line
+       (anywhere else it may match itself, in some BRE implementations)
+
+   * - the asterisk is DIFFERENT from when used in
+       filename expansion!
+
+       a single character followed followed by a *
+       matches 0 or more occurrences OF THAT CHARACTER
+
+       a*  - 0 or more a's   
+       H*  - 0 or more H's
+
+       a pattern that matches a set of characters followed
+       by a * matches 0 or more characters FROM THAT SET
+
+       [moxie]* - matches 0 or more m's, o's, x's,
+                  i's, e's, in ANY combination
+
+*   helpful tip: if you want 0 or more
+    of ANY character,
+    use    .*
+
+*      Note:  Quantifiers * and + (we will see the latter in ERE) are "greedy".
+       Example:  The expression is:  3.*5
+       If the line to be matched were:
+          3535353535353535
+       the match would be "3535353535353535", rather than just "35",
+       due to the "greediness" of the * quantifier!
+
+*   [set] - a set of characters in square brackets
+            matches any SINGLE character from the
+	    set (called a BRACKET EXPRESSION)
+
+            MOSTLY the same as for bracket expressions
+	    in filename expansion,
+	    EXCEPT... for a few things
+
+            ex: a ^ after the opening bracket
+                but before the set means match
+                any character NOT in that set
+
+		[^0-9] - should match any single non-digit
+ 
+
+CS 279 - Week 8 Lecture 1 - 10-13-2014
+
+*   more on grep
+    *   man grep 
+        ...does lead to a proper man page that's
+           just about grep!
+
+    *   pp. 175-177 of the course text also go a bit
+        further;
+
+    *   we know that -E allows it to accept
+        EREs (as does the command egrep)
+
+    *   default behavior:
+        unless you use an option that changes it,
+        when you call grep with a pattern and a single
+	   file name,
+	   it outputs just the matching lines;
+        when you call grep with a pattern and more
+           than one file name (this includes a filename
+	   expansion pattern),
+           it outputs the pathname of the file as it
+           was specified on the command line, a colon,
+           and then the matching line
+
+# for shell-script fun during this lecture... 8 - )
+CS 279   CS 279
+
+*   some options to change grep's default output:
+    -n   precede each matching line by its line number
+         (whether you get the file name too depends
+	 on how many file names it was called with)
+
+    -c   only show a count of matching lines
+
+    -l   shows the names of files containing matching
+         strings
+         (see cheesy example in grep1.sh)
+
+    -s   suppress error messages for non-existent or
+         unreadable files
+
+    -q   run quietly -- don't write ANYTHING to standard
+         output -- BUT, exit with zero status (success)
+         if any input lines are selected/matched
+
+*   and here are a couple more -- from the MANY MANY
+    on the man page...
+
+    -v   select the lines that DON'T match
+
+    -i   ignore the case of lines in making comparisons
+
+bash shell programming feature of the day:
+-------------------------------------------
+*   the if statement!
+
+*   basic syntax:
+
+if <test-commands>
+then
+    <consequent-commands>
+fi
+
+if <test-commands>
+then
+    <consequent-commands>
+else
+    <alternate-consequents>
+fi
+
+if <test-commands>
+then
+   <consequent-commands>
+elif <more-test-commands>
+then
+   <next-consequents-commands>
+elif <more-test-commands>
+then
+   <next-consequents-commands>
+else  # this is still optional
+   <alternate-consequents>
+fi
+
+*   the <test-commands> list is executed,
+    and if its return status is zero (success),
+    then the if's <consequents-commands> are executed;
+   
+tests in bash...
+-----------------
+*   some conditionals work inside of [ ], which is the
+    same as giving them as arguments to the test command
+
+    *   the [ ] are actually considered a command,
+        and so need to be surrounded by at least a blank
+
+    here are an interesting selection of these:
+
+    -e <filename>
+
+    if [ -e $1 ]
+    then
+        cat $1
+    fi
+
+    (actually, the interesting selection is coming later)
+
+    <string> = <string>   < true if the first <string>
+                            is identical to the second
+
+    <int> -eq <int>       < true if both ints are identical
+
+*   there are also some commands that ONLY work within
+    DOUBLE square brackets [[    ]]
+
+    <string> =~ <regex>   true if <string> matches
+                          <regex>
+
+    ...and a few more;
+
+
+
+CS 279 - Week 8 Lab - 10-14-2014
+
+*   both test and [ ] can contain a variety of
+    tests (those listed in the link on the
+    public course web page, for example)
+
+    ...you can play with test from the command line,
+    BUT using it with && (short-circuiting boolean
+    and) and an echo can let you see if the test
+    succeeded -- only if it succeeded will the
+    echo be evaluated:
+
+    test -e pig.txt && echo 'you have that file'
+    
+    ...you'll only see
+    you have that file
+    ...IF pig.txt exists;
+
+    -e file 	    - true if file exists
+
+    -f file         - true if regular file
+
+    -d file         - true if file is a directory
+
+    -h file         - true if file is a symbolic link
+  
+    -r file         - true if file is readable by you
+
+    -w file         - ...is writable by you
+
+    -x file         - ...is executable by you
+
+    -s file         - ...exists and is not empty
+
+*   you can use ! in front of one of these
+    to test for its negation --
+
+    test ! -e pig.txt && echo 'file does not exist'
+
+NOTE:
+*   you can EXIT a bash shell script with a particular
+    exit status by using the exit command followed
+    by the desired integer exit status
+
+    if [ ! -e $desired_file ]
+    then
+        echo "$0: $desired_file does not exist"
+        echo "    ...exiting"
+        exit 1
+    fi
+
+    *   if you are exiting "prematurely", it is good
+        style to use a non-zero exit status
+        (and that's now a class coding standard, too)
+
+    *   example using exit: exit-ex.sh
+
+*   you can see if a string is empty (length of 0) or not
+ 
+    -z string   - true if the string is empty (length
+                 of 0)
+
+    -n string   - true if the string is not empty
+                  (nonzero length)
+
+*   some binary/more comparative testers: (still
+    in [ ] or with test)
+
+    file1 -nt file2   - true if file1 is newer than
+                        file2
+
+    file1 -ot file2   - true if file1 is older than
+    	      	        file2
+
+    string1 = string2 - true if string1 is identical
+                        to string2
+
+    string != string2 - true if string1 is NOT 
+    	      	      	identical to string2
+
+ 
+    *   BEWARE - be prepared for spaces in filenames!
+
+        advice from:
+http://www.davidpashley.com/articles/writing-robust-shell-scripts.html
+
+        if [ $filename = "foo" ]
+
+        ...will FAIL if $filename contains a space
+
+        if [ "$filename" = "foo" ]
+
+        ...WON'T fail if $filename contains a space
+
+*   this is also of concern when you are grabbing
+    all of the command-line arguments in a shell
+    script:
+
+    for i in $@
+    do
+        echo $i
+    done
+
+    ...say this is in a script for-quotes.sh --
+    if you call it with:
+
+    for-quotes.sh moo "arf oink"
+    ...you'll get THREE lines of output:
+    moo
+    arf
+    oink
+
+    ...NOT the two you probably expected:
+    moo 
+    arf oink
+
+    *   the blank in the second command line argument is making it
+        look like multiple arguments;
+
+    *   this won't happen if you double-quote the $@:
+
+    for i in "$@"
+    do
+        echo $i
+    done
+
+    ...now, you'll get the desired 1-line of output for each 
+       command-line argument, even if one happens to contain blanks
+
+    ...for-quotes.sh now has BOTH of the above loops, so you
+       can compare and contrast their behavior
+
+*   there are also tests for comparing integers
+
+    int1 -eq int2    --- true if int1 is identical to
+                         int2
+    int1 -ne int2    ...not identical
+    int1 -lt int2    ...less than
+    int1 -gt int2    ...greater than
+    int1 -le int2    ...less than or equal
+    int1 -ge int2    ...greater than or equal
+
+    *   more-than-5.sh shows an example of using one of the
+        above to see if the number of command-line arguments
+	(obtainable using $#) is acceptable for that shell script;
+
+*   talking a little more about operators that
+    work inside [[ ]]
+
+    string =~ regex   true if string matches
+                      regex
+
+    *   remember NOT to put quotes around
+        the regex!
+
+*   note that && and || are short-circuited boolean-and and
+    boolean-or operators (respectively) inside [[ ]]
+
+*   string = filename-expansion-pattern
+    string == filename-expansion-pattern
+
+    (notice, this is different than = in [ ] )
+
+    *   glob-play.sh tries this out;
+
+*   can use ( ) to change evaluation
+    precedence in [[ ]], too;
+
+*   OH -- and what if you'd like to loop through all of the
+    lines in a particular file?
+
+    ...there's more than one way, BUT this way DOES
+       maintain one-line-per-loop-iteration behavior
+       (even if a line contains blanks):
+
+    while read line
+    do
+        echo "\$line: $line"
+    done < fodder.txt
+
+    notice the 
+    read 
+    ...as part of the while condition, and the 
+    < filename 
+    AFTER the while loop's done !
+    done < filename
+
+    *   read-lines-ex.sh shows this in action
+ 
+
+
+
+CS 279 - Week 9 Lecture 1 - 10-20-2014
+
+*   the CS Club meets Mondays at 3 pm in BSS 420
+    you can sign up for its mailing list at
+    humboldt.edu/clubs/club_sites/computer_science_club
+    or http://www2.humboldt.edu/clubs/club_sites/computer_science_club
+
+*   two more diff options:
+--------------------------
+    -c - provides CONTEXT for the differences --
+         it outputs 3 lines of context surrounding
+         each difference
+
+    -b - ignore trailing whitespace and treat sequences
+         of whitespace as equivalent to a single blank
+
+a little more about the wc ("wordcount") command:
+-------------------------------------------------
+*   counts the number of lines, words, and bytes
+    in a file OR set of files
+
+    by default, that is the order of those values
+
+*   if you give more than 1 file,
+    you also get a final line of output
+    with the TOTAL number of lines, words,
+    and bytes
+
+    ...or if you put NO files, it uses standard
+    input (so you CAN pipe to the wc command!)
+
+    *  can use ^D to say you're ready for
+       your standard input to be counted;
+
+*   word here is defined as a nonempty sequence
+    of characters delimited by whitespace
+    
+*   use the -c option to see just the number of bytes,
+    use the -l option to see just the number of lines,
+    and use the -w option to see just the number of
+       "words"
+
+    (but you can combine these, too)
+
+touch
+-----
+*   touch "touches" a file, updating its access
+    and modification times
+
+*   IF the file doesn't exist, it creates it
+
+tee
+---
+*   provides a way to capture the contents of a pipe
+    without disrupting the flow of information
+    through the pipe 
+
+    ...named after a tee joint in plumbing...
+
+    tee filename...
+    ...causes standard input to be copied both
+       to standard output and to the file or files
+       specified
+
+    ls | tee looky | wc -l
+
+    command1 | command2 | tee this | command3 | tee that | something
+    *   here, this contains command2's output,
+        and that contains command3's output;
+
+    -a - append the output to each file instead
+         of overwriting the file
+
+    -i - ignore interrupts
+
+find 
+-----
+*   find is used to locate files on a UNIX or Linux
+    system;
+
+    *   find will search any set of directories you
+        specify for files that match the search
+        criteria you specify
+
+        (you can search by attributes such as
+	 name, owner, group, type, permissions,
+         date, and etc.!)
+
+    *   note it IS recursive -- it WILL search
+        all subdirectories, too;
+
+    *   basic syntax:
+    
+        find where-to-look criteria what-to-do
+
+        where-to-look defaults to .
+        criteria defaults to none (select all files)
+	what-to-do defaults to -print,
+           which has the side-effect of displaying
+	   the names of found files to standard output
+
+(
+find
+..did not work on Sharon Tuttle's Apple Macintosh computer, BUT
+find . -print 
+...prints ALL files, including in subdirectories,
+   from the current directory on Apple Macintosh computers (BSD Unix based)
+)
+
+find (without any options) prints all files recursively (including
+   sub-directory paths) on Linux.
+   
+Common find commands:
+
+find . -type f -name *txt -ls
+    (prints all files of type File from the current path ending in "txt", and
+    shows their long directory listing (permission, owner, group, length, etc.)
+
+find /var/log -type d -ls
+    (prints all directories under /var/log with permissions, owner, group,
+    etc.)
+   
+
+
+
+CS 279 - Week 9 Lecture 2 - 10-22-2014
+
+*   we know that ${arrayname[*]}
+    we get all of the elements of the array
+
+    it so happens that ${arrayname[@]} also
+    gives you all of the elements of the array, BUT...
+
+    ...the result is the same EXCEPT when expanding to the
+       items of the array within a QUOTED string
+
+*  WHEN QUOTED,
+   "${arrayname[*]}" returns all of the elements of
+       the array elements as a SINGLE word
+   "${arrayname[@]}" returns EACH item as a SEPARATE word
+
+*   testing this in quoted-star-at.sh
+
+find, part 2
+-------------
+*   when a find criterion involves a numeric argument,
+    it can be given in 1 of 3 ways:
+
+    n by itself - it indicates exactly the value n
+    -n          - that indicates a value LESS THAN n
+    +n          - that indicates a value GREATER THAN n
+
+    so, the criterion:
+    -size +1000c
+    ...is satisfied by files containing MORE than 1000
+       characters (bytes)
+
+*   a few more find criteria of note:
+
+    -type typecode
+    ...is true if the file is of the specified type
+
+    -type d    - true if file is a directory
+    -type f    - true if file is an ordinary file
+    -type l    - true if file is a symbolic link
+    ...and a few other special kinds of files
+
+*   -links n - true of the file has n hard links (subject to
+               the numerical bit discussed earlier
+
+*   -user uname - true if the owner of the file is user
+                  uname
+
+*   -group gname - true if the file belongs to group gname
+
+    *   groups command lists your groups...
+
+*   -size n
+    -size nc   <-- that's a letter c following the number
+
+    ...be true if the file is that number of 512-byte
+       blocks (without the c) or that number of bytes (with
+       the c)
+       (subject to the number notation above)
+
+*   -atime n - true if file was ACCESSED n days ago
+    -mtime n - true if file was MODIFIED n days ago
+    -ctime n - true if i-node info was modified n days ago
+
+*   -newer fname - true if current file modified
+                   MORE RECENTLY than the given file
+
+*   -perm 
+    *   octnum - true if file has exactly those permissions
+    *   -octnum - true if file has at LEAST those permissions
+    *   mode - CAN'T start with a dash - must match exactly
+               -perm =r,u+w
+    *   -mode - must match AT LEAST these permissions
+                -perm -x
+
+*   -exec cmd 
+     true if the cmd returns an exit status of 0 when 
+       executed as a child process
+
+    *   often used for the SIDE-EFFECTS of cmd...!
+        (e.g., removal)
+
+    *   end of cmd (and all of its arguments) must be
+        marked with a semicolon
+	(and the semicolon has to be escaped so the
+	shell doesn't try to interpret it)
+
+    *   within cmd, the notation {} indicates the
+        pathname of the current file being considered
+ 
+        find crud -name "*.bak" -type f -mtime 365 -exec rm {} \;
+
+
+
+CS 279 - Week 10 Lecture 1 - 10-27-2014
+
+*   when you use =~ operator within [[ ]] with
+    a regular expression,
+    IF that RE has parenthesized subexpressions,
+    then you can ACCESS those from the
+    BASH_REMATCH array variable.
+
+    *   ${BASH_REMATCH[0]} - contains the matched
+        substring.
+    *   then ${BASH_REMATCH[1]} contains the 
+        match for the 1st subexpression,
+	and [2] for the 2nd subexpression, ...
+
+*   see rematch-play.sh
+    and clicker-rematch.sh.
+
+gzip and gunzip
+---------------
+*   see pp. 140-143 in the course text for more
+    on these.
+
+*   gzip and gunzip
+    *   gzip compresses one or more files,
+        gunzip uncompresses one or more files.
+
+    *   uses Lempel-Ziv compression.
+
+    *   TYPICAL compression rates of 60-70%
+        for natural language text,
+	computer source code files.
+        (NOT all files compress well!!)
+
+*   SIMPLEST use:
+    *   gzip filename
+        ...and the result will be filename's
+	   removal, and a new hopefully-compressed
+	   file filename.gz in its place.
+
+    *   gunzip filename.gz
+        ...and result will be 
+           hopefully-uncompressed file filename
+	   (and the .gz version is removed).
+
+*  a FEW of the potential options:
+   *   note that if NO filenames are given,
+       compressed stdin to stdout (so
+       COULD use this in a pipe!).
+
+   *   -c option keeps the original file unchanged.
+
+   *   -S desired-suffix uses that suffix instead
+       of .gz.
+
+    *   -n: for compressing, means DON'T save
+            the original name and time stamp
+	    for expanding, don't restore the 
+	    original name and timestamp, just
+	    remove the .gz.
+
+    *   -N: for compressing, save the original
+            pathname and timestamp (default);
+	    for expanding, restore the original
+	    pathname and timestamp.
+
+    *   -r traverses the directory structure
+           recursively.
+
+    *   -v (verbose) display the name of the
+           file compressed or expanded and 
+	   the % reduction.
+
+tar
+---
+*   much more on this on pp. 151-154.
+*   archive: a collection of files in which
+    each file is labeled with information
+    about its origin.
+*   several main purposes:
+    *   to have a convenient package.
+    *   to have a BACKUP copy.
+    *   to have a package that's more shareable/
+        transportable.
+
+*   tar - stands for tape archive,
+    but it doesn't have to involve magnetic
+    tape.
+    *   tar cvf desired-archive-name.tar original-directory
+        create archive desired-archive-name.tar
+	from original-directory.
+
+        c option needed to specify creation of a tar archive.
+        v option is optional, verbose, means output what's
+	    being done. Fun fact: the verbose output seems to be not
+	    to standard output, but to standard error!
+        f option means you specify the name of the archive file
+	    to be created (that .tar filename following the cvf).
+
+    *   tar xvf desired-archive-name.tar
+        extract files from desired-archive-name.tar
+        and restore them
+        (extract back into directory form).
+
+        x option needed to specify that you want to extract files
+            from the archive.
+        v option is optional, verbose, means output what's
+	    being done. 
+        f option means you specify the name of the archive file
+	    to be extracted from (that .tar filename following the
+	    xvf).
+        
+other fun options:
+   r   - append the files to the end of the archive.
+   t   - list the contents of the archive.
+   u   - update the archive by only adding files
+         not yet there or modified since the
+	 last archive write.
+
+   w   - wait for confirmation of each action.
+
+
+
+
+CS 279 - Week 10 Lecture 2 - 10-29-2014
+
+*   a few more words on ls:
+---------------------------
+    -R - list subdirectories recursively.
+
+    -F - indicates file type in its output --
+         puts * after an executable file,
+	 put / after a directory,
+	 put @ after a symbolic link.
+    
+    -t - lists the files in chronological order,
+         by default, in order of last modification,
+	 newest first.
+
+         -tr gives you the OLDEST files first.
+
+         -tu gives you the files in order of last ACCESS
+	 newest first.
+
+    -u - with -l uses ACCESS time (shows that instead
+         of last-modified time).
+
+    -c - with -l uses when the i-node was last modified
+         "namely, when the file was created or its 
+	 permissions last modified".
+
+head (section 4.4.1, p. 184)
+tail (section 4.4.2, pp. 184-186)
+---------------------------------
+*   head [-n num] [files ...]
+
+    *   if no -n option, displays the first 10 lines
+        of the indicated files.
+    *   if no files, it takes input from standard
+        input (so it can be used in a pipe).
+    *   if -n and a number, it displays
+        the first that-many lines.
+
+tail 
+----
+*   tail displays parts from the end of a file.
+    
+    tail [-f] [-c num | -n num] [file]
+
+    *  if NO -c or -n, the last 10 lines are displayed
+       (default).
+
+    *   if -c num, the last num BYTES are displayed.
+    *   if -n num, the last num LINES are displayed.
+
+    *   if you put a + in front of the num for -c or -n,
+        it displays starting at the numth byte or line
+	    in the file.
+
+        if no sign or a - in front of the number,
+	it's the "typical" behavior noted above.
+
+*   -f option - doesn't terminate after producing its
+    output. Instead, it awaits further bytes from
+    its input file, and shows them if they become available.
+
+    only way to stop it is to interrupt it or to
+    kill its parent process.
+
+    (with a pipe and standard input, the tail -f
+    DOES terminate when the pipe terminates.)
+
+intro to sed
+------------
+*   stream editor?
+    can be used for modifying streams of text on the fly
+    originally written in 1973 or 1974 by Lee E. McMahon.
+
+    derived from the ed editor, although it is NOT
+    just like it.
+
+*   the BASIC work cycle of sed:
+    1. reads a line from standard input into its
+       pattern buffer (text calls this the input
+       buffer).
+    2. modify the pattern buffer according to
+       the supplied commands.
+    3. print the pattern buffer to standard out.
+
+*   an application of sed consists of applying
+    a fixed editing script to a sequence of files.
+
+    sed [-n] script [file..]
+    sed [-n] [-e script] ... [-f scriptfile] [file..]
+
+*   an editing script consists of a sequence of commands
+    separated by either newlines or semicolons.
+    *   each command is indicated by a single letter or other
+        character.
+    *   most commands can be preceded by a selector,
+        either an "address" or a pair of "addresses"
+	called a range.
+
+    *   if there's a selector, only the lines selected
+        by that selector have the commands done to them.
+
+    *   "address" means either a line number
+         or a basic regular expression.
+
+         range can be two "addresses" separated by a 
+	 comma, do the action JUST to the lines in
+	 that range (inclusive).
+
+*   one quick command to start:
+    s for substitute
+
+    [selector] s/patt/repl/[flags]
+
+    example flag: g, means replace EVERY instance
+    of patt with repl in the line(s) indicated by
+    selector, OR all lines if no selector given.
+
+    no flags? replaces the FIRST instance in each line.
+
+    a flag that's an int num? replaced the numth instance in
+    each line.
+
+(more on sed coming up soon)
+
+
+
+
+
+CS 279 - Week 11 Lecture 1 - 11-3-2014
+
+bash command-line tidbit of the day:
+     a little MORE history
+------------------------------------
+*   you already know the history command
+    and that you can type the up-arrow and down-arrow
+    to scroll through and conveniently redo
+    previous commands.
+
+*   !! redoes the previous command.
+
+    !<num> redoes the command with that number <num>
+        in the history.
+
+    !-<num> redoes the command <num> commands
+        ago.
+
+    !<str> redoes the most recent command that
+        starts with <str>.
+
+    !?<str> redoes the most recent command that
+        CONTAINS <str>.
+
+*   if you type (at the command prompt)
+    a ctrl-r, you can then enter part of a
+    previous command and the shell will try to
+    reverse-search for a matching command --
+    type return when you get to the command you
+    want.
+
+*   you can redo the previous command with a
+    substitution by:
+    ^what-to-replace^replace-with^
+
+    ...replaces the first instance of what-to-replace
+       with replace-with.
+
+    ^2^4^
+
+    ...redo the previous command with the first
+    2 replaced with 4.
+
+*   you can get a sed-like substitution with:
+    !!:s/2/4/
+    ...does the same thing as ^2^4^.
+
+    BUT:
+    !!:gs/2/4/ does the GLOBAL substitution of
+        replacing every 2 in the previous command
+	with a 4.
+
+    ...you can use other !-expressions before
+    the : also.
+
+    for history with:
+    516  emacs test7.txt    
+
+    doing:
+    !516:gs/t/x/
+    ...does the command 
+    emacs xesx7.xxx
+
+BACK to a LITLLE MORE sed:
+---------------------------
+*   MANY nice sed examples at:
+    http://sed.sourceforge.net/sed1line.txt
+
+*   there's a d command!
+
+    ...it deletes lines.
+
+    if you precede it by an "address",
+    a line number or a regular expression,
+    it deletes just the line with that number
+    or the lines that match that regular expression.
+
+    (if you give it a range, it deletes those
+    lines in the range.)
+
+    sed -e '/^$/d' try-bang.sh
+
+    ..would output all non-blank lines of
+    try-bang.sh (it deletes all blank ones, you
+    see).
+
+*   you can have multiple scripts in a sed command
+
+    ...separate them by newlines or semicolons.
+
+    sed -e 's/#.*//;/^$/d' try-bang.sh
+
+    ...should output only non-comment non-empty
+    lines from try-bang.sh.
+    
+    order matters -- this version will result
+    in blank lines where entire comment lines
+    were:
+    sed -e '/^$/d;s/#.*//' try-bang.sh
+
+*   from that same good example source
+    to change scarlet OR ruby OR puce to red
+    you can do:
+
+    sed -e 's/scarlet/red/g;s/ruby/red/g;s/puce/red/g' myfile.txt
+
+selectors in sed commands:
+*   most sed commands can be preceded by a selector,
+    where a selector is an "address" or a pair of
+    "addresses".
+
+    ...each "address" is a line number or a regular 
+    expression (and you can use $ as the address
+    of the last line).
+
+*   example:
+    /jam/d    # delete each line containing jam
+    /bar/d    # delete each line containing bar
+
+    3d	      # delete the 3rd line (1 is the
+              # number of the 1st line)
+
+*   for a range, put a comma between two
+    "addresses".
+
+    /jam/,/jelly/ - range from a
+                    line containing jam to 
+		    the next line after that
+		    line containing jelly,
+		    INCLUSIVE
+ 
+                    and then repeat until
+		    end of file 
+
+    *   remember: we are selecting lines
+        that a script is to be applied to --
+        so, first and last are included.
+
+    *   if a line has BOTH jam and jelly,
+        just that one line is selected.
+
+	if a line has jam but no subsequent
+	line has jelly,
+	all the lines from jam on are selected.
+
+
+
+
+Basic function syntax (pre-parameters)
+
+funct_name()
+{
+    body_of_function
+}
+
+...
+
+funct_name
+
+*   you DO have to define the function before you
+    can use it
+*   you DON'T put () after the function name when you
+    call it -- you get an ERROR if you do!
+
+how can you run a function from 1 shell script in
+another?
+*   if you source a shell script A within a shell
+    script B, then any variables or functions
+    or things created by the sourced shell script
+    A can be USED in shell script B
+
+parameters!
+*   you DON'T put anything in the header for
+    parameters!
+... you just refer to $1, $2, $3, ... $@ etc.
+    IN THE FUNCTION BODY
+
+    (PLEASE NOTE -- the $1, $2, etc. in a
+    function body are thus NOT the same as
+    the $1, $2, etc. not in function bodies
+    in the rest of the shell script)
+
+*   note: you CANNOT change the parameters --
+    (how WOULD you change $1? Can't say 1=...)
+
+    you CAN change a non-parameter variable,
+    and the result will be seen outside the
+    function;
+    and you can set a variable for the first
+    time in a function body, and it can be
+    seen after a call to that function in the
+    script/caller
+
+*   (if you want to use the "outer" script's
+    arguments in a function,
+    you could pass them AS a function argument,
+    or you could set a named variable to the
+    shell script argument and the function body
+    could see and use the named variable
+
+*   also note:
+    a function WILL be called in a sub-shell
+    if its output is piped somewhere else --
+    so,   myfunct 1 2 3 | tee out.txt
+    ...is run in a sub-shell, not the current
+    shell
+    ...and THAT call cannot change x in the
+    current shell
+
+
+
+
+CS 279 - Week 13 Lecture 1 - 11-17-2014
+
+a few more words about bash function "effects"
+-----------------------------------------------
+*   can a bash function return a value? (in a functional sense?)
+    *   I'd say -- not exactly, but kind of;
+
+*   how can a bash function "affect" what is around it?
+    *   it can change the state of "global" variable or variables 
+        (that's a side-effect, note, not a true "return")
+
+    *   it can use the exit command to end the function -- this
+        does return an exit status, BUT since this also ends the
+	script that CALLED this function, it might be a bit drastic!
+
+        *   funct-exit.sh and call-funct-that-exits.sh demonstrate
+            that this is, indeed, the case;
+
+    *   it can use the return command to end the function --
+        THIS IS NOT THE SAME AS A C++ return, as it does not return
+	a function value, BUT rather it returns an exit status!
+
+        ...but it also DOESN'T end up exiting the calling shell script,
+        so that shell script CAN use $? to see the exit status of
+	this function once it is completed
+
+        *   think about how a bash function is called -- just like
+	    a UNIX command or shell -- where WOULD a "returned" value
+	    go, really?
+
+        *   see funct-return.sh and call-funct-that-returns.sh to 
+            demo that this is indeed the case;
+
+    *   the function can output to standard out, which can be "caught" 
+        by the caller, for example with backquotes!
+
+	result=`funct_called $val blah`
+
+        ...which ironically kind of looks closest to "traditional-ish"
+	function return, even though it isn't!
+
+        *   see echo3.sh, which includes the following call to a
+            function echo3, catching what it echoes to standard out
+	    using backquotes into a variable
+
+	    trio=`echo3 la`
+
+a few more notes about bash functions
+--------------------------------------
+*   remember: a bash function cannot modify its arguments (how WOULD
+    you modify $1? 1=...?)
+
+*   note that a bash function CAN be recursive -- see factorial.sh
+
+a few words on ftp/sftp
+------------------------
+
+FTP - File Transfer Protocol - a protocol for transmitting
+      files to and from a remote computer
+
+ftp is a program that uses FTP to transmit files to and
+from a remote computer that understands that protocol
+
+The FTP protocol, and hence the ftp command are insecure, and therefore
+deprecated.  All information, including user credentials get transmitted
+in the Clear!
+
+(from Wikipedia)
+sftp - secure ftp - the sftp program is a command-line
+       interface client program implementing the
+       client-side of the SSH File Transfer Protocol
+       as implemented by the sftp-server command by
+       the OpenSSH project,
+       which runs INSIDE the encrypted Secure Shell
+       connection
+        
+*   command-line sftp: call with:
+
+    sftp username@host
+
+    sftp ah720@nrs-labs.humboldt.edu
+
+         ^^^ if you omit the username, uses the username of the
+             current shell -- if that ISN'T the same as the username
+	     on the remote machine, you WON'T be able to log in.
+
+*   at the sftp> prompt, you can type various sftp commands -- here are a
+    FEW useful ones to get you started:
+
+    ?   - gives a list of sftp commands, each with a 1-line description 
+
+    cd directory_name 
+        - change to directory directory_name on the remote machine
+
+    lcd directory_name 
+        - change to directory directory_name on your (local) computer 
+
+    pwd - see the name of the current directory on the remote machine
+
+    lpwd 
+        - see the name of the current directory on your (local) computer 
+
+    put file_name 
+        - transfer a copy of the file file_name from your (local) computer 
+          to the remote machine
+
+    get file_name 
+        - transfer a copy of the file file_name from the remote machine 
+          to your (local) computer 
+
+    quit 
+        - exit sftp 
+
+    
+
+
+
+CS 279 - Week 13 Lecture 2 - 11-19-2014
+
+*   we've used let for arithmetic computations;
+
+*   expr can also be used for these, (and for some
+    other operations as well)
+
+    expr <expr>
+
+    *   <expr> is made up of "words" <-- value,
+        operator, or parenthesis
+
+    *   words MUST be separated by white space
+
+    *   characters meaningful to the shell	
+        must be escaped
+
+    *   must quote null strings and strings 
+        containing blanks
+
+    *   comparisons: <   >    <=    >=   !=   ==
+
+        logical operations:
+        expr1 | expr2
+        *   if expr1 is neither null or zero,
+            result is expr1; otherwise,
+            it is expr2
+
+        expr1 & expr2
+        *   if neither expr1 nor expr2 is null
+            or zero, result is expr1; otherwise
+	    it is zero
+
+    *   you can also do pattern matching:
+
+        expr1 : expr2
+
+        *   treats expr1 as a string and
+	    treats expr2 as a BRE (basic 
+            regular expression), returns
+            the number of characters matched,
+	    or 0 if the match failed
+
+            (ONE subexpression is allowed,
+	    if used, the matching substring
+	    is returned)
+
+    *   Helpful expr online resources:
+
+    http://linux.101hacks.com/unix/expr/
+    http://www.folkstalk.com/2012/09/expr-command-examples-in-unix-linux.html
+
+
+bc - on-line calculator
+*   pp. 280-286 talks about preloading functions
+    and other goodies
+
+*   ^d or quit to quit
+*   you can pipe an expression to it!
+    (echo the expression...
+
+    echo "3*4" | bc
+
+sleep
+*   do nothing for a specified number of
+    seconds
+
+sleep 5
+
+*   demo'd in beeper.sh
+
+time
+*   gives you the real time, user time,
+    and system time that it took to run
+    a command
+
+wait 
+*   wait until the specified process id
+    completes to go on
+
+wait 4604   # 4604 is a process id
+
+nohup - "no hangup"
+*   execute a command in such a way
+    that it continues to execute even if you
+    log off or disconnect your terminal
+    "hang up"
+
+    remember the & 
+
+*   (use 
+    ps x
+    to see that the process is still running
+    when its terminal is closed)
+
+nice 
+*   run something at a lower priority
+    than it would normally get 
+
+    nice [-n num] <cmd>
+
+    number is expected to be 1-19 (acc to
+    course text), it adds that to the
+    process's priority (and bigger numbers
+    are lower priority)
+
+    renice lets you lower the priority of
+    a running process --
+    
+    renice [-n number] [-p <process-id>]
+
+
+
+
+CS 279 - Week 14 Lecture 1 - 12-1-2014
+
+bash does have a case statement --
+here's its basic syntax:
+
+case <expression> in
+    <pattern1>) <command1>
+                <command2>
+                ;;
+
+    <pattern2>) <command>
+                ;;
+
+    *)          <commands>
+                ;;
+esac
+
+*   semantics: it compares the <expression> to each <pattern>
+    in turn, and as soon as it matches 1, it does that
+    pattern's actions, and then exits the case statement
+
+    notice the *) case IS optional -- if NO cases
+    match, NONE of the case branches are taken
+
+RCS - Revision Control System
+*   Walter Tichy, 1982, stores versions of a file with
+    a complete copy of the latest version, and differences
+    (deltas) between it and previous versions
+
+*   text discusses RCS on pp. 302-306, also
+
+*   an RCS revision group file is a file name
+    followed by ,v
+
+    there's a number of ways to create this, BUT
+    a very simple way is to use the check-in command, ci,
+    to check in a version of a file that hasn't been
+    checked in before
+
+    ci myfile
+
+    ...result is myfile,v
+    (and you don't see myfile -- BUT you can check out
+    another copy easily with check-out command, co)
+
+*   co -l myfile
+    ...check-out the latest version of myfile from
+    myfile,v and give me the lock (so I can update it)
+
+    co myfile
+    ...check out a read-only version of myfile from
+    myfile,v
+
+*   rlog myfile
+    ... I'll get listing of versions and log entries
+
+*   rcsdiff myfile
+    ...I'll get the differences between my copy of the
+    file and the latest version
+
+*** Note:  rcs is rather dated, and has been superceded by
+    cvs (Concurrent Versions System), svn (Subversion), git
+    and others...
+   
+   
+
+
+
+CS 279 - Week 14 Lecture 2 - 12-3-2014
+
+*   you will get "mail" messages from the cron daemon
+    if there's a problem with you command in a crontab
+    entry;
+
+    you might get a message at some point saying
+    you have mail in something like:
+    /var/spool/mail/<username>
+
+    *   the mail command is the best way to view and process
+	these messages -- it's command-line but reasonably friendly:
+	within the mail program,
+	h - lists your mail
+        p - reads the top message
+        d - deletes the top message
+        (there are numerous other commands, too)
+        ...and you can leave the mail program using ctrl-d or q...
+
+*   uptime
+    *   note that the load average is (approximately) the
+        average number of processes running or waiting
+	for the CPU... but that's not exact!
+
+        *   this white paper by someone named Neil Gunther
+            digs into this in some detail, if you are interested;
+	    
+            http://www.teamquest.com/resources/gunther/display/5/
+
+            and this article is supposed to be more up-to-date:
+            http://www.linuxjournal.com/article/9001
+
+	    ...it does seem to be a rough-but-useful indicator,
+	    and it does seem to be related to the run-queue length,
+	    the average number of processes in the run-queue;
+
+        *   I like how it was put in an answer at:
+http://superuser.com/questions/23498/what-does-load-average-mean-in-unix-linux
+            *   "Load average is a gauge of how many processes are, 
+                on average, concurrently demanding CPU attention."
+
+		...I hope that's reasonably accurate.
+
+*   top 
+    *   displays and updates sorted information about
+        processes
+
+*   at, batch
+    *   pp. 243-246 of the course text
+    *   at lets you request the running of something
+        at a particular time -- a ONE-SHOT, not
+	repeated like crontab
+
+    *   batch asks the system to run it when the
+        system chooses;
+
+    *   at <time-indicator>
+        then type each command
+	and end with ctrl-d
+
+        at -l
+	...then lists the at-jobs 
+
+        atrm <job-num>
+	...can be used to remove the job with number
+	   <job-num>
+
+*   batch is similar, but you don't have to give
+    a time when to run, you can let the system choose
+
+    batch
+    <cmd>
+    <cmd>
+    ^d to finish
+
+*   environment variable IFS - input field separator
+    *   see text, p. 372 to read about it,
+        and p. 279 has an example using it
+
+    *   this affects what is used to separate "things"
+        for the read command, and certain expansions
+	as command substitutions,
+	but NOT how direct shell command input is
+        parsed;
+
+    *   its default is a string containing a space,
+        a tab, and a newline character;
+
+    *   according to the course text, it's rarely
+        useful to change IFS except to modify the
+	behavior of a read command
+
+    *   some additional read notes:
+        *   read can take multiple variable names;
+	    it tries to set each based on the value of
+	    the input line
+
+            too little input for the number of variables?
+            the trailing variables will just be empty
+
+            too much input for the number of variables?
+            the last variable gets the rest of the input,
+	    input field separator characters and all;
+  
+
+
+
+CS 279 - Week 15 Lecture 1 - 12-8-2014
+
+a few more odds and ends...
+
+*   date
+    *   yes, it gives the current date and time,
+        BUT it also can be given format descriptors
+	to specify an output string with JUST certain
+	parts of the date and time included;
+
+    *   you PRECEDE such a string with +
+
+    *   you PRECEDE each format descriptor with a %
+
+    *   see examples in screen shot
+
+cal 
+...can get an ASCII version of a monthly calendar
+*   can specify a year, and get all 12 months
+*   can specify a month and a year, and get just that
+    month
+*   ...and see man page for more...
+
+*   October 1582 is not correctly displayed, though...
+    http://www.wisegeek.com/what-happened-to-the-calendar-in-october-1582.htm
+
+printf
+*   expects a string with format descriptors
+    followed by values to be formatted in that string
+    using those format descriptors
+
+    pp. 274-278 and the man page have the MANY options
+    and kinds of format descriptors!!
+
+    but see screen shot for some quick'n'sleazy
+    examples;
+
+*   df - reports free disk space
+    du - reports the disk space in use by a given
+         file or directory
+
+    du <name>
+    du -a <name> - if <name> a directory, get the
+                   disk space for each file within
+    du -s <name> - only total usage (summary?) for <name>
+
+*   uname 
+    esp. uname -a
+    can give you info about the OS, network node,
+    hardware of your system;
+    * actually, it shows the architecture of the installed OS,
+      e.g. x86_64 for 64 bit, or i386/i586/i686 for 32 bit
+    * hardware information is in the kernel log (/var/log/dmesg)
+      on some systems available via "dmesg" command.  Also, to get
+      detail hardware info, run command "dmidecode".
+
+*   sys admin advice:
+    *   make TWO accounts, an admin and day-to-day,
+        so you don't shoot yourself in the foot;
+
+    *   keep little files in a recognizable place
+        with what actually worked for sys admin duties;
+
+*   sudo
+    *   perform a command or commands as superuser
+    *   a file sudoers contains which users are permitted
+        to do this
+
+*   useradd - add a new user
+
+*   passwd - a user can reset their password,
+    a superuser can set an account's password
+       
+    
