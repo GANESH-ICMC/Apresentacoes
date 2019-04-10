@@ -1,10 +1,34 @@
 # Python
 
+Table of Contents
+=================
 
+   * [Python](#python)
+      * [Conceitos Básicos](#conceitos-básicos)
+            * [Tipos de dados:](#tipos-de-dados)
+      * [Operações Básicas](#operações-básicas)
+         * [Aritméticas](#aritméticas)
+         * [Lógicas](#lógicas)
+      * [Tipagem](#tipagem)
+      * [Entrada e Saída](#entrada-e-saída)
+      * [Listas](#listas)
+      * [Strings](#strings)
+      * [Controle](#controle)
+         * [Condicionais](#condicionais)
+         * [Repetição](#repetição)
+      * [Bibliotecas](#bibliotecas)
+         * [Import](#import)
+         * [Pip](#pip)
+         * [Biblioteca OS](#biblioteca-os)
+         * [Biblioteca SYS](#biblioteca-sys)
+         * [Pwntools](#pwntools)
+            * [Utilities](#utilities)
+            * [Tubes](#tubes)
+               * [Conexão](#conexão)
+               * [Envio e Recebimento de Informações](#envio-e-recebimento-de-informações)
+               * [SSH](#ssh)
+   * [References](#references)
 
-
-
-[TOC]
 
 
 
@@ -253,6 +277,18 @@ Execute com `./nomeprograma.py arg1 arg2 ...`
 
 ```python
 #!/bin/python3
+
+
+
+
+# References
+
+- [Violent Python - A Cookbook for Hackers ...](https://www.amazon.com.br/Violent-Python-Cookbook-Penetration-Engineers/dp/1597499579)
+- [Black Hat Python](https://novatec.com.br/livros/black-hat-python/)
+- [Pwntools Tutorial](https://github.com/Gallopsled/pwntools-tutorial )
+- [Python3 Reference](https://docs.python.org/3/)
+- [Pwntools Reference](http://docs.pwntools.com/en/stable/)
+
 import sys
 
 print(sys.argv)
