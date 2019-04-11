@@ -5,7 +5,7 @@ Table of Contents
 
    * [Python](#python)
       * [Conceitos Básicos](#conceitos-básicos)
-            * [Tipos de dados:](#tipos-de-dados)
+         * [Tipos de dados](#tipos-de-dados)
       * [Operações Básicas](#operações-básicas)
          * [Aritméticas](#aritméticas)
          * [Lógicas](#lógicas)
@@ -194,28 +194,26 @@ print("Fim do programa")
 
 
 
-> ### Repetição
->
-> ​	Estruturas de while e for, funciona de forma semelhante ao C, com a atenção para a sintaxe do Python, ou seja, sem parêntesis e com `:` e indentação.
->
-> ​	Usualmente o for é utilizado para iterar sobre uma lista, arquivo, set, etc; Mas pode ser usado também para iterar sobre um range de números
->
-> ```python
-> x = 5
-> while x != 0:
->     print(x)
->     x -= 1 # x = x - 1
->     
-> for x in range(10):
->     print(x)
->     
-> for animal in ["cachorro", "gato", "elefante"]:
->    	print("%s é um animal" % (animal))
->   
-> 
-> ```
->
-> 
+### Repetição
+ ​	Estruturas de while e for, funciona de forma semelhante ao C, com a atenção para a sintaxe do Python, ou seja, sem parêntesis e com `:` e indentação.
+
+ ​	Usualmente o for é utilizado para iterar sobre uma lista, arquivo, set, etc; Mas pode ser usado também para iterar sobre um range de números
+
+ ```python
+ x = 5
+ while x != 0:
+     print(x)
+     x -= 1 # x = x - 1
+     
+ for x in range(10):
+     print(x)
+     
+ for animal in ["cachorro", "gato", "elefante"]:
+    	print("%s é um animal" % (animal))
+   
+ ```
+
+
 
 ## Bibliotecas
 
@@ -278,17 +276,6 @@ Execute com `./nomeprograma.py arg1 arg2 ...`
 ```python
 #!/bin/python3
 
-
-
-
-# References
-
-- [Violent Python - A Cookbook for Hackers ...](https://www.amazon.com.br/Violent-Python-Cookbook-Penetration-Engineers/dp/1597499579)
-- [Black Hat Python](https://novatec.com.br/livros/black-hat-python/)
-- [Pwntools Tutorial](https://github.com/Gallopsled/pwntools-tutorial )
-- [Python3 Reference](https://docs.python.org/3/)
-- [Pwntools Reference](http://docs.pwntools.com/en/stable/)
-
 import sys
 
 print(sys.argv)
@@ -316,8 +303,7 @@ print("Chegou aqui")
 
 - write('filename', 'data') - Escreve os dados no arquivo
 
-  
-
+ 
   Hashing e Encoding
 
 - urlencode("Hello, World!") - Encoda a string para formato url
@@ -396,12 +382,11 @@ io.recvline()
 # 'Hello, world!\n'
 ```
 
+# References
 
+- [Violent Python - A Cookbook for Hackers ...](https://www.amazon.com.br/Violent-Python-Cookbook-Penetration-Engineers/dp/1597499579)
+- [Black Hat Python](https://novatec.com.br/livros/black-hat-python/)
+- [Pwntools Tutorial](https://github.com/Gallopsled/pwntools-tutorial )
+- [Python3 Reference](https://docs.python.org/3/)
+- [Pwntools Reference](http://docs.pwntools.com/en/stable/)
 
-``````
-
-``````
-
-```````
-
-```````
