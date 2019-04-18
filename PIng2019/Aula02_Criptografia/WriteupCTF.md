@@ -42,7 +42,7 @@ Então, pesquisa-se sobre cifras de bacon, e encontra-se uma com exatamente esse
 
 O "insight" para resolver o desafio gira em torno de entender que existem formas diferentes de se representar caracteres A e B, por exemplo utilizando letras maiúsculas e minúsculas.
 
-Tentando por exemplo substituir todas as letras maiúsculas por A's e minúsculas por B's e vice versa, basta jogar o resultado em decoders online como o [dcode.fr](dcode.fr), assim obtendo a flag, a qual deve ser colocada no formato Ganesh{}.
+Tentando por exemplo substituir todas as letras maiúsculas por A's e minúsculas por B's e vice versa, basta jogar o resultado em decoders online como o [dcode.fr](https://www.dcode.fr/bacon-cipher), assim obtendo a flag, a qual deve ser colocada no formato Ganesh{}.
 
 ```
 Ganesh{NAO_QUEIME_UMA_CIFRA_DE_BACON}
