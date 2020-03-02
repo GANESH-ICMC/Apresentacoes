@@ -1,0 +1,9 @@
+L1 = R0
+R1 = f(R0, k0)^L0
+ciphertext = R1 + L1
+
+R0 = L1
+R1 = f(L1, k0)^L0
+L0^R1 = f(L1, k0)
+L0 = f(L1, k0)^R1
+plaintext = L0 + R0
