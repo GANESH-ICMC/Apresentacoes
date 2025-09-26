@@ -1,0 +1,5 @@
+.\local_dll_injection.exe .\MALICIOUS_DLL.dll
+
+.\dll_injector.exe C:\Users\Ariel\Desktop\Ganesh\DLL_Injection\Executable\MALICIOUS_DLL.dll 11480
+- Steam (x32)
+- Hamachi (x32)
